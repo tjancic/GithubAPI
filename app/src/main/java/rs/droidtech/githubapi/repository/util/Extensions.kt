@@ -3,7 +3,9 @@ package rs.droidtech.githubapi.repository.util
 import android.Manifest
 import android.content.Context
 import android.net.ConnectivityManager
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.RequiresPermission
 import com.squareup.picasso.Picasso
@@ -31,3 +33,6 @@ fun View.show() {
 fun View.hide() {
     this.visibility = View.INVISIBLE
 }
+
+fun ViewGroup.inflate(resource: Int, attachToRoot: Boolean = false): View =
+    LayoutInflater.from(context).inflate(resource, this, attachToRoot)

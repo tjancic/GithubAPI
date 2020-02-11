@@ -61,3 +61,9 @@ fun generateNetworkError(): ErrorResponse = ErrorResponse(
         R.string.network_error
     )
 )
+
+fun generateNoDataError(): ErrorResponse = ErrorResponse(
+    error_description = GithubAPIApplication.applicationContext().getString(
+        R.string.no_data_error
+    )
+)

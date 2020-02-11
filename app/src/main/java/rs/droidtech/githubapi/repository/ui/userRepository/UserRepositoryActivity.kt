@@ -1,31 +1,33 @@
-package rs.droidtech.githubapi.repository.ui.userDetails
+package rs.droidtech.githubapi.repository.ui.userRepository
 
-import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_user_details.*
+import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.activity_user_repository.*
 import kotlinx.android.synthetic.main.mvp_loading_error_layout.*
 import rs.droidtech.githubapi.R
-import rs.droidtech.githubapi.repository.model.GithubUser
+import rs.droidtech.githubapi.repository.model.GithubUserRepo
 import rs.droidtech.githubapi.repository.repository.DataRepository
 import rs.droidtech.githubapi.repository.repository.DataRepositoryContract
 import rs.droidtech.githubapi.repository.repository.remote.RemoteRepository
 import rs.droidtech.githubapi.repository.repository.remote.util.ErrorResponse
 import rs.droidtech.githubapi.repository.repository.remote.util.generateNetworkError
-import rs.droidtech.githubapi.repository.ui.userRepository.UserRepositoryActivity
+import rs.droidtech.githubapi.repository.repository.remote.util.generateNoDataError
+import rs.droidtech.githubapi.repository.ui.userRepository.adapter.UserRepositoryAdapter
 import rs.droidtech.githubapi.repository.util.*
 
-class UserDetailsActivity : AppCompatActivity(), UserDetailsView {
+class UserRepositoryActivity : AppCompatActivity(), UserRepositoryView {
 
-    private lateinit var presenter: UserDetailsPresenter
+    private lateinit var presenter: UserRepositoryPresenter
     private lateinit var repository: DataRepositoryContract
 
     private val user: String? by stringPreference(PreferenceProperty.DEFAULT_USER_KEY, "octocat")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_user_details)
+        setContentView(R.layout.activity_user_repository)
+
+        setupRecyclerView()
 
         setupRepository()
         setupPresenter()
@@ -33,8 +35,18 @@ class UserDetailsActivity : AppCompatActivity(), UserDetailsView {
         invokeGetData()
 
         // todo: handle configuration changes.
-        // todo: add settings menu option to get data from another user
         // todo: add local repository
+    }
+
+    private fun setupRecyclerView() {
+
+        val repoAdapter = UserRepositoryAdapter()
+
+        recyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(this@UserRepositoryActivity)
+            adapter = repoAdapter
+        }
     }
 
     private fun invokeGetData() = user?.let {
@@ -47,19 +59,20 @@ class UserDetailsActivity : AppCompatActivity(), UserDetailsView {
     }
 
     private fun setupPresenter() {
-        presenter = UserDetailsPresenter(this, repository)
+        presenter = UserRepositoryPresenter(this, repository)
         lifecycle.addObserver(presenter)
     }
 
-    override fun setData(data: GithubUser) {
+    override fun setData(data: List<GithubUserRepo>) {
         // Populate UI with data
-        loadImage(data.avatar_url, userAvatar)
-        nameValue.text = data.name
-        companyValue.text = data.company
-
-        // Handle with UI
-        contentGroup.show()
-        hideLoading()
+        if (data.isNotEmpty()) {
+            (recyclerView.adapter as UserRepositoryAdapter).updateRepo(data)
+            // Handle with UI
+            contentGroup.show()
+            hideLoading()
+        } else {
+            generateNoDataError()
+        }
     }
 
     override fun setError(error: ErrorResponse?) {
@@ -76,10 +89,4 @@ class UserDetailsActivity : AppCompatActivity(), UserDetailsView {
     override fun hideLoading() {
         progressBar.hide()
     }
-
-    fun showReposClick(view: View) {
-        val intent = Intent(this, UserRepositoryActivity::class.java)
-        startActivity(intent)
-    }
-
 }

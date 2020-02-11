@@ -5,4 +5,7 @@
     <string name="list_of_repos">Show list of repository</string>
     <string name="user_avatar_desc">avatar</string>
     <string name="network_error">Network error!</string>
+    <string name="repository_name">Repository name: %s</string>
+    <string name="opened_issues">Issues (%s)</string>
+    <string name="no_data_error">No data.</string>
 </resources>
