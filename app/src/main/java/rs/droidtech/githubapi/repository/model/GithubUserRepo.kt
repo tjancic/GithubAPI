@@ -1,5 +1,8 @@
 package rs.droidtech.githubapi.repository.model
 
+import rs.droidtech.githubapi.R
+import rs.droidtech.githubapi.repository.GithubAPIApplication
+
 data class GithubUserRepo(
     val archive_url: String,
     val archived: Boolean,
@@ -74,7 +77,19 @@ data class GithubUserRepo(
     val url: String,
     val watchers: Int,
     val watchers_count: Int
-)
+) {
+    fun getRepositoryName(): String =
+        String.format(
+            GithubAPIApplication.applicationContext().getString(R.string.repository_name),
+            name
+        )
+
+    fun getOpenIssueCount(): String =
+        String.format(
+            GithubAPIApplication.applicationContext().getString(R.string.opened_issues),
+            open_issues_count.toString()
+        )
+}
 
 data class Owner(
     val avatar_url: String,
