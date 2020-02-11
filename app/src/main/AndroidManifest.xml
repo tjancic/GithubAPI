@@ -3,6 +3,7 @@
     package="rs.droidtech.githubapi">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -12,8 +13,8 @@
         android:name=".repository.GithubAPIApplication"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
-        <intent-filter>
+        <activity android:name=".repository.ui.userDetails.UserDetailsActivity">
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />

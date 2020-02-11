@@ -1,4 +1,4 @@
-package rs.droidtech.githubapi.repository.remote
+package rs.droidtech.githubapi.repository.repository.remote
 
 import retrofit2.http.GET
 import retrofit2.http.Path
