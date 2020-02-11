@@ -8,7 +8,7 @@ import rs.droidtech.githubapi.R
 import rs.droidtech.githubapi.databinding.UserRepositoryItemBinding
 import rs.droidtech.githubapi.repository.model.GithubUserRepo
 
-class UserRepositoryAdapter :
+class UserRepositoryAdapter(val clickListener: (GithubUserRepo) -> Unit) :
     RecyclerView.Adapter<UserRepositoryAdapter.UserRepositoryViewHolder>() {
 
     private var repos: List<GithubUserRepo> = mutableListOf()
@@ -30,6 +30,7 @@ class UserRepositoryAdapter :
     override fun onBindViewHolder(holder: UserRepositoryViewHolder, position: Int) {
         val repo = repos[position]
         holder.binding.repository = repo
+        holder.itemView.setOnClickListener { clickListener(repo) }
     }
 
     fun updateRepo(repos: List<GithubUserRepo>) {

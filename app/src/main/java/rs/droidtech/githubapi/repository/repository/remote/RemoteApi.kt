@@ -8,6 +8,7 @@ object RemoteApi {
 
     const val USERS_ROUTE = "users"
     const val REPOS_ROUTE = "repos"
+    const val COMMITS_ROUTE = "commits"
 
     val githubService = Retrofit.Builder()
         .baseUrl(BASE_URL)

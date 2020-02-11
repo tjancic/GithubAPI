@@ -53,7 +53,7 @@ class UserDetailsActivity : AppCompatActivity(), UserDetailsView {
 
     override fun setData(data: GithubUser) {
         // Populate UI with data
-        loadImage(data.avatar_url, userAvatar)
+        userAvatar.loadImage(data.avatar_url)
         nameValue.text = data.name
         companyValue.text = data.company
 

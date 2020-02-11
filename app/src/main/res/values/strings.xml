@@ -8,4 +8,5 @@
     <string name="repository_name">Repository name: %s</string>
     <string name="opened_issues">Issues (%s)</string>
     <string name="no_data_error">No data.</string>
+    <string name="committed_on">committed on %s</string>
 </resources>

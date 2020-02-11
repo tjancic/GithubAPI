@@ -1,4 +1,4 @@
-package rs.droidtech.githubapi.repository.ui.userRepository
+package rs.droidtech.githubapi.repository.ui.commits
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -6,27 +6,32 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_user_repository.*
 import kotlinx.android.synthetic.main.mvp_loading_error_layout.*
 import rs.droidtech.githubapi.R
-import rs.droidtech.githubapi.repository.model.GithubUserRepo
+import rs.droidtech.githubapi.repository.model.GithubCommit
 import rs.droidtech.githubapi.repository.repository.DataRepository
 import rs.droidtech.githubapi.repository.repository.DataRepositoryContract
 import rs.droidtech.githubapi.repository.repository.remote.RemoteRepository
 import rs.droidtech.githubapi.repository.repository.remote.util.ErrorResponse
 import rs.droidtech.githubapi.repository.repository.remote.util.generateNetworkError
 import rs.droidtech.githubapi.repository.repository.remote.util.generateNoDataError
-import rs.droidtech.githubapi.repository.ui.commits.CommitsActivity
-import rs.droidtech.githubapi.repository.ui.userRepository.adapter.UserRepositoryAdapter
-import rs.droidtech.githubapi.repository.util.*
+import rs.droidtech.githubapi.repository.ui.commits.adapter.CommitsAdapter
+import rs.droidtech.githubapi.repository.util.getExtra
+import rs.droidtech.githubapi.repository.util.hide
+import rs.droidtech.githubapi.repository.util.isOnline
+import rs.droidtech.githubapi.repository.util.show
 
-class UserRepositoryActivity : AppCompatActivity(), UserRepositoryView {
+class CommitsActivity : AppCompatActivity(), CommitsView {
 
-    private lateinit var presenter: UserRepositoryPresenter
+    companion object {
+        const val OWNER_EXTRA_KEY = "owner"
+        const val REPOSITORY_EXTRA_KEY = "repository"
+    }
+
+    private lateinit var presenter: CommitsPresenter
     private lateinit var repository: DataRepositoryContract
-
-    private val user: String? by stringPreference(PreferenceProperty.DEFAULT_USER_KEY, "octocat")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_user_repository)
+        setContentView(R.layout.activity_commits)
 
         setupRecyclerView()
 
@@ -34,33 +39,27 @@ class UserRepositoryActivity : AppCompatActivity(), UserRepositoryView {
         setupPresenter()
 
         invokeGetData()
-
-        // todo: handle configuration changes.
-        // todo: add local repository
     }
 
     private fun setupRecyclerView() {
-
-        val repoAdapter = UserRepositoryAdapter {
-            val extras = mapOf(
-                CommitsActivity.OWNER_EXTRA_KEY to it.owner.login,
-                CommitsActivity.REPOSITORY_EXTRA_KEY to it.name
-            )
-            gotoActivity(
-                CommitsActivity::class,
-                extras = extras
-            )
-        }
-
         recyclerView.apply {
-            setHasFixedSize(true)
-            layoutManager = LinearLayoutManager(this@UserRepositoryActivity)
-            adapter = repoAdapter
+            layoutManager = LinearLayoutManager(this@CommitsActivity)
+            adapter = CommitsAdapter()
         }
     }
 
-    private fun invokeGetData() = user?.let {
-        if (isOnline()) presenter.getData(it) else setError(generateNetworkError())
+    private fun invokeGetData() {
+
+        val owner = getExtra<String>(OWNER_EXTRA_KEY)
+        val repository = getExtra<String>(REPOSITORY_EXTRA_KEY)
+
+        owner?.let {
+            repository?.let {
+                val request: Map<String, String> =
+                    mapOf("owner" to owner, "repository" to repository)
+                if (isOnline()) presenter.getData(request) else setError(generateNetworkError())
+            }
+        }
     }
 
     private fun setupRepository() {
@@ -69,14 +68,14 @@ class UserRepositoryActivity : AppCompatActivity(), UserRepositoryView {
     }
 
     private fun setupPresenter() {
-        presenter = UserRepositoryPresenter(this, repository)
+        presenter = CommitsPresenter(this, repository)
         lifecycle.addObserver(presenter)
     }
 
-    override fun setData(data: List<GithubUserRepo>) {
+    override fun setData(data: List<GithubCommit>) {
         // Populate UI with data
         if (data.isNotEmpty()) {
-            (recyclerView.adapter as UserRepositoryAdapter).updateRepo(data)
+            (recyclerView.adapter as CommitsAdapter).updateCommits(data)
             // Handle with UI
             contentGroup.show()
             hideLoading()
