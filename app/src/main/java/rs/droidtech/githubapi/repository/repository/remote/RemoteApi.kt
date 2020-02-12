@@ -15,6 +15,4 @@ object RemoteApi {
         .addConverterFactory(MoshiConverterFactory.create())
         .build()
         .create(GithubService::class.java)
-
-    // todo: add interceptor!
 }

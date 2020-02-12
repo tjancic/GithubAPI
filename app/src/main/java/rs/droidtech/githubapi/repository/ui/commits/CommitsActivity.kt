@@ -75,7 +75,7 @@ class CommitsActivity : AppCompatActivity(), CommitsView {
     }
 
     override fun showInvalidDataError() {
-        // todo: show message
+        errorView.text = getString(R.string.invalid_data_entry)
     }
 
     override fun setData(data: List<GithubCommit>) {
