@@ -9,4 +9,7 @@
     <string name="opened_issues">Issues (%s)</string>
     <string name="no_data_error">No data.</string>
     <string name="committed_on">committed on %s</string>
+    <string name="user_details_title">Github: User details</string>
+    <string name="user_repos_title">Github: User repos</string>
+    <string name="user_commits_title">Github: User commits</string>
 </resources>

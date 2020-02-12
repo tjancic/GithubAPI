@@ -32,6 +32,7 @@ class UserDetailsActivity : AppCompatActivity(), UserDetailsView {
 
         invokeGetData()
 
+        title = getString(R.string.user_details_title)
         // todo: handle configuration changes.
         // todo: add settings menu option to get data from another user
         // todo: add local repository

@@ -35,6 +35,8 @@ class UserRepositoryActivity : AppCompatActivity(), UserRepositoryView {
 
         invokeGetData()
 
+        title = getString(R.string.user_repos_title)
+
         // todo: handle configuration changes.
         // todo: add local repository
     }

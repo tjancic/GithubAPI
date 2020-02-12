@@ -39,6 +39,8 @@ class CommitsActivity : AppCompatActivity(), CommitsView {
         setupPresenter()
 
         invokeGetData()
+
+        title = getString(R.string.user_commits_title)
     }
 
     private fun setupRecyclerView() {
@@ -70,6 +72,10 @@ class CommitsActivity : AppCompatActivity(), CommitsView {
     private fun setupPresenter() {
         presenter = CommitsPresenter(this, repository)
         lifecycle.addObserver(presenter)
+    }
+
+    override fun showInvalidDataError() {
+        // todo: show message
     }
 
     override fun setData(data: List<GithubCommit>) {
