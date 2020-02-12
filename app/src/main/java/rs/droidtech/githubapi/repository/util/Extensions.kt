@@ -10,9 +10,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.annotation.RequiresPermission
 import com.squareup.picasso.Picasso
 import rs.droidtech.githubapi.R
+import rs.droidtech.githubapi.repository.GithubAPIApplication.Companion.applicationContext
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -95,3 +97,6 @@ fun String.toDate(
         this
     }
 }
+
+fun showToast(message: String) =
+    Toast.makeText(applicationContext(), message, Toast.LENGTH_SHORT).show()

@@ -1,5 +1,8 @@
 package rs.droidtech.githubapi.repository.ui.commits.adapter
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context.CLIPBOARD_SERVICE
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -9,7 +12,9 @@ import rs.droidtech.githubapi.repository.GithubAPIApplication.Companion.applicat
 import rs.droidtech.githubapi.repository.model.GithubCommit
 import rs.droidtech.githubapi.repository.util.inflate
 import rs.droidtech.githubapi.repository.util.loadImage
+import rs.droidtech.githubapi.repository.util.showToast
 import rs.droidtech.githubapi.repository.util.toDate
+
 
 class CommitsAdapter : RecyclerView.Adapter<CommitsAdapter.CommitsViewHolder>() {
 
@@ -31,6 +36,14 @@ class CommitsAdapter : RecyclerView.Adapter<CommitsAdapter.CommitsViewHolder>() 
             applicationContext().getString(R.string.committed_on),
             commit.commit.committer.date.toDate()
         )
+
+        holder.itemView.copyToClipboard.setOnClickListener {
+            val clipboard: ClipboardManager? =
+                applicationContext().getSystemService(CLIPBOARD_SERVICE) as ClipboardManager?
+            val clip = ClipData.newPlainText("sha", commit.sha)
+            clipboard?.setPrimaryClip(clip)
+            showToast("Saved on clipboard : ${commit.sha}")
+        }
     }
 
     fun updateCommits(commits: List<GithubCommit>) {
