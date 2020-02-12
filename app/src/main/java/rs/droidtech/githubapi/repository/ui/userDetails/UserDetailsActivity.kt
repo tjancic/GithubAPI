@@ -2,6 +2,8 @@ package rs.droidtech.githubapi.repository.ui.userDetails
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_user_details.*
@@ -13,6 +15,7 @@ import rs.droidtech.githubapi.repository.repository.DataRepositoryContract
 import rs.droidtech.githubapi.repository.repository.remote.RemoteRepository
 import rs.droidtech.githubapi.repository.repository.remote.util.ErrorResponse
 import rs.droidtech.githubapi.repository.repository.remote.util.generateNetworkError
+import rs.droidtech.githubapi.repository.ui.userDetails.dialog.UserDialog
 import rs.droidtech.githubapi.repository.ui.userRepository.UserRepositoryActivity
 import rs.droidtech.githubapi.repository.util.*
 
@@ -21,7 +24,7 @@ class UserDetailsActivity : AppCompatActivity(), UserDetailsView {
     private lateinit var presenter: UserDetailsPresenter
     private lateinit var repository: DataRepositoryContract
 
-    private val user: String? by stringPreference(PreferenceProperty.DEFAULT_USER_KEY, "octocat")
+    private var user: String? by stringPreference(PreferenceProperty.DEFAULT_USER_KEY, "octocat")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,8 +58,8 @@ class UserDetailsActivity : AppCompatActivity(), UserDetailsView {
     override fun setData(data: GithubUser) {
         // Populate UI with data
         userAvatar.loadImage(data.avatar_url)
-        nameValue.text = data.name
-        companyValue.text = data.company
+        nameValue.text = data.name ?: data.login
+        companyValue.text = data.company ?: "No company"
 
         // Handle with UI
         contentGroup.show()
@@ -83,4 +86,21 @@ class UserDetailsActivity : AppCompatActivity(), UserDetailsView {
         startActivity(intent)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.set_owner) {
+            val dialog = UserDialog()
+            dialog.show(supportFragmentManager, UserDialog::class.simpleName)
+            dialog.owner = user
+            dialog.onSaveClickListener = {
+                user = it
+                invokeGetData()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }
