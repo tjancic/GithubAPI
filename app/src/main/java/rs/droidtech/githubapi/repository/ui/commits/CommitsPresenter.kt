@@ -27,6 +27,10 @@ class CommitsPresenter(
                     )
                 }
             }
+        } else {
+            viewContract?.let {
+                (viewContract as CommitsView).showInvalidDataError()
+            }
         }
     }
 }
