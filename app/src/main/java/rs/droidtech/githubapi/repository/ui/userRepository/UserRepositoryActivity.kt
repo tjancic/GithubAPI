@@ -80,7 +80,7 @@ class UserRepositoryActivity : AppCompatActivity(), UserRepositoryView {
             contentGroup.show()
             hideLoading()
         } else {
-            generateNoDataError()
+            setError(generateNoDataError())
         }
     }
 

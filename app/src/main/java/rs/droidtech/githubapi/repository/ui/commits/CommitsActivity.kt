@@ -86,7 +86,7 @@ class CommitsActivity : AppCompatActivity(), CommitsView {
             contentGroup.show()
             hideLoading()
         } else {
-            generateNoDataError()
+            setError(generateNoDataError())
         }
     }
 
